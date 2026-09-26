@@ -41,13 +41,31 @@ def get_expenses():
     connection.close()
     return expenses
 
+def get_monthly_expenses(start_date,end_date):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT id,date,amount ,category,description
+        FROM expenses
+        WHERE date >= ? AND date < ?
+        ORDER BY date
+        """,(start_date,end_date))
+    
+    expense = cursor.fetchall()
+    connection.close()
+    return expense
+
 if __name__ == "__main__":
     initialize_database()
     
     # print("Database initialized successfully.")
     # print("Expense added successfully.")
     
-    expenses = get_expenses()
-    print("Expenses:")
+    expenses = get_monthly_expenses(
+        "2026-09-01",
+        "2026-10-01"
+    )
+    print("September Expenses:")
     print(expenses)
 
