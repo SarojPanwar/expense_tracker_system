@@ -36,7 +36,10 @@ def get_expenses():
     connection = get_connection()
     cursor = connection.cursor()
 
-    cursor.execute("SELECT * FROM expenses")
+    cursor.execute("""
+        SELECT * FROM expenses
+        ORDER BY date DESC,id DESC
+        """)
     expenses = cursor.fetchall()
     connection.close()
     return expenses
@@ -56,6 +59,16 @@ def get_monthly_expenses(start_date,end_date):
     connection.close()
     return expense
 
+def delete_expense(expense_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+    cursor.execute(
+        "DELETE FROM expenses WHERE id = ?",
+        (expense_id,)
+    )
+    connection.commit()
+    connection.close()
+    
 if __name__ == "__main__":
     initialize_database()
     
